@@ -82,6 +82,7 @@ def grafica_ejes():
 	pygame.draw.line(pantalla,(0,0,0),[R2_x[0]+300,R2_x[1]+300],[R2_x_m[0]+300,R2_x_m[1]+300])
 	pygame.draw.line(pantalla,(0,0,255),[R2_y[0]+300,R2_y[1]+300],[R2_y_m[0]+300,R2_y_m[1]+300])
 	pygame.draw.line(pantalla,(255,0,0),[R2_z[0]+300,R2_z[1]+300],[R2_z_m[0]+300,R2_z_m[1]+300])
+	agregar_marcas()
 	pinta_figuras()
 	pygame.display.flip()
 
@@ -133,6 +134,50 @@ def pinta_punto(punto,color):
 	mensaje = fuente.render(text, 0, color)
 	pantalla.blit(mensaje, (esca[0]-3,esca[1]-14))
 	pygame.display.flip()
+
+def pinta_num(punto,color,txt):
+	punto_x = transforma_punto(punto)
+	r2 = proyection(punto_x)
+	esca = escalar(r2)
+	fuente = pygame.font.Font(None, 15)
+	text = str(txt)
+	mensaje = fuente.render(text, 0, color)
+	pantalla.blit(mensaje, (esca[0]+10,esca[1]+5))
+	pygame.display.flip()
+
+
+def agregar_marcas():
+
+	global escala
+	cantidad = int(600/escala)
+	
+	for i in range(1,cantidad):
+		x = [(i),0,0]
+		y = [0,(i),0]
+		z = [0,0,(i)]
+		m_x = [-(i),0,0]
+		m_y = [0,-(i),0]
+		m_z = [0,0,-(i)]
+
+		pinta_punto(x,(0,0,0))
+		pinta_num(x,(0,0,0),str(i))
+
+		pinta_punto(m_x,(0,0,0))
+		pinta_num(m_x,(0,0,0),"-- "+str(i))
+
+		pinta_punto(y,(0,0,255))
+		pinta_num(y,(0,0,255),str(i))
+
+		pinta_punto(m_y,(0,0,255))
+		pinta_num(m_y,(0,0,255),"-- "+str(i))
+
+		pinta_punto(z,(255,0,0))
+		pinta_num(z,(255,0,0),(i))
+
+		pinta_punto(m_z,(255,0,0))
+		pinta_num(m_z,(255,0,0),"-- "+str(i))
+		
+
 
 def pinta_caja(points,color):
 	points_aux = []
