@@ -243,6 +243,13 @@ def iniciar(esca):
 	pygame.init()
 	grafica_ejes()
 	
+def pinta_todos(points,color):
+	for i in range(len(points)):
+		pinta_punto(points[i],color)
+		for j in range(i+1,len(points)):
+			pinta_linea([points[i],points[j]],color)
+	
+
 def get_angulos():
 	return ang_x,ang_y,ang_z
 
@@ -257,6 +264,8 @@ def pinta_figura(tipo,points,color):
 		pinta_linea(points,color)
 	elif tipo == 'punto':
 		pinta_punto(points,color)
+	elif tipo == 'todos':
+		pinta_todos(points,color)	
 
 def pinta_figuras():
 
@@ -269,5 +278,6 @@ def pinta_figuras():
 			pinta_linea(fig[1],fig[2])
 		elif fig[0] == 'punto':
 			pinta_punto(fig[1],fig[2])
-		
+		elif fig[0] == 'todos':
+			pinta_todos(fig[1],fig[2])		
 	

@@ -100,7 +100,10 @@ def pinta_vector():
 	agrega_figura("VECTOR")
 
 def pinta_todos():
-	pass
+	points = secciona(parsea(get_coordenadas()))
+	plano.pinta_figura('todos',points,color_code[0])
+	agrega_figura("FIGURA")
+	
 
 def cargar_archivo():
     global arr_cor
