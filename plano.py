@@ -31,21 +31,31 @@ def producto_punto(vari_1,vari_2):
 	salida = [x,y,z]
 	return salida
 
+def get_radianes(angulo):
+	return (angulo*(math.pi/180))
+
+
 def rotacion_y():
-	mat_rotacion = [[math.cos(ang_y),0,math.sin(ang_y)],
+	#r_an = get_radianes(ang_y)
+	r_an = ang_y
+	mat_rotacion = [[math.cos(r_an),0,math.sin(r_an)],
 					[0,1,0],
-					[-math.sin(ang_y), 0,math.cos(ang_y)]]
+					[-math.sin(r_an), 0,math.cos(r_an)]]
 	return mat_rotacion
 
 def rotacion_x():
+	#r_an = get_radianes(ang_x)
+	r_an = ang_x
 	mat_rotacion = [[1,0,0],
-					[0,math.cos(ang_x),-math.sin(ang_x)],
-					[0, math.sin(ang_x),math.cos(ang_x)]]
+					[0,math.cos(r_an),-math.sin(r_an)],
+					[0, math.sin(r_an),math.cos(r_an)]]
 	return mat_rotacion
 
 def rotacion_z():
-	mat_rotacion = [[math.cos(ang_z),-math.sin(ang_z),0],
-					[math.sin(ang_z),math.cos(ang_z),0],
+	#r_an = get_radianes(ang_z)
+	r_an = ang_z
+	mat_rotacion = [[math.cos(r_an),-math.sin(r_an),0],
+					[math.sin(r_an),math.cos(r_an),0],
 					[0,0,1]]
 	return mat_rotacion
 
@@ -82,7 +92,7 @@ def grafica_ejes():
 	pygame.draw.line(pantalla,(0,0,0),[R2_x[0]+300,R2_x[1]+300],[R2_x_m[0]+300,R2_x_m[1]+300])
 	pygame.draw.line(pantalla,(0,0,255),[R2_y[0]+300,R2_y[1]+300],[R2_y_m[0]+300,R2_y_m[1]+300])
 	pygame.draw.line(pantalla,(255,0,0),[R2_z[0]+300,R2_z[1]+300],[R2_z_m[0]+300,R2_z_m[1]+300])
-	agregar_marcas()
+	#agregar_marcas()
 	pinta_figuras()
 	pygame.display.flip()
 
@@ -249,6 +259,44 @@ def pinta_todos(points,color):
 		for j in range(i+1,len(points)):
 			pinta_linea([points[i],points[j]],color)
 	
+def pinta_manta(points,colores):
+	
+	for i in range(len(points)):
+		pinta_punto(points[i],colores[i])
+	
+def pinta_funcion(points,colores):
+	cont = 0
+	tamaño = colores[cont]
+	cont=1
+	print(tamaño)
+	for i in points:
+		pinta_punto(i,colores[cont])
+		cont+=1
+	cont = 1
+	cont_i = 0
+	i = 0
+	print(tamaño)
+	for i in range(tamaño):
+		for j in range(tamaño):
+			if j<tamaño-1 and i<tamaño-1:
+				pos1 = cont_i
+				pos2 = cont_i+1 
+				pos3 = cont_i+tamaño
+				l1 = [points[pos1],points[pos2]]
+				l2 = [points[pos1],points[pos3]]
+				pinta_linea(l1,colores[cont])
+				pinta_linea(l2,colores[cont])
+			else:
+				if j == tamaño-1 and not(i == tamaño-1):
+					pos = cont_i+tamaño
+					lin = [points[cont_i],points[pos]]
+					pinta_linea(lin,colores[cont])
+				elif i == tamaño-1 and not(j == tamaño-1):
+					pos = cont_i+1
+					lin = [points[cont_i],points[pos]]
+					pinta_linea(lin,colores[cont])
+			cont_i+=1
+			cont+=1
 
 def get_angulos():
 	return ang_x,ang_y,ang_z
@@ -265,7 +313,9 @@ def pinta_figura(tipo,points,color):
 	elif tipo == 'punto':
 		pinta_punto(points,color)
 	elif tipo == 'todos':
-		pinta_todos(points,color)	
+		pinta_todos(points,color)
+	elif tipo == 'funcion':
+		pinta_funcion(points,color)
 
 def pinta_figuras():
 
@@ -280,4 +330,6 @@ def pinta_figuras():
 			pinta_punto(fig[1],fig[2])
 		elif fig[0] == 'todos':
 			pinta_todos(fig[1],fig[2])		
+		elif fig[0] == 'funcion':
+			pinta_funcion(fig[1],fig[2])
 	

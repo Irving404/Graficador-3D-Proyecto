@@ -5,6 +5,8 @@ from tkinter import colorchooser
 import plano
 import pygame  
 import re
+import math
+import random
 
 l_b = 12
 l_e = 10
@@ -12,7 +14,7 @@ l_en = 15
 l_t = 10
 color_code=((0,0,255),('#0000ff'))
 arr_cor = []
-contador = 0.1
+contador = 0.5
 
 def rotar_x_M():
 	plano.rota_eje_x(True)
@@ -104,6 +106,37 @@ def pinta_todos():
 	plano.pinta_figura('todos',points,color_code[0])
 	agrega_figura("FIGURA")
 	
+def genera_seno():
+	tamaño = 10
+	points = []
+	valores = []
+	cambio = int(255/(tamaño*tamaño))
+	dic = {}
+	x = 0
+	ii = 0
+	while x<=tamaño:
+		y = 0
+		while y<=tamaño:
+			z = math.sin(x)*math.sin(x)
+			points.append([x,y,z])
+			if not(z in valores):
+				valores.append(z)
+			y +=0.5
+		ii +=1
+		x += 0.5	
+	valores = sorted(valores)
+
+	for i in valores:
+		dic.setdefault(i,get_color())
+	colores=[ii]
+	for i in points:
+		colores.append(dic.get(i[2]))
+	plano.pinta_figura('funcion',points,colores)
+
+
+
+def get_color():
+	return (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
 def cargar_archivo():
     global arr_cor
@@ -256,7 +289,7 @@ boton4 = tk.Button(text="GRAFICAR PLANO",command=(pinta_plano),font=("Times", l_
 boton4.place(x=300, y=270)
 boton4 = tk.Button(text="GRAFICAR CAJA",command=(pinta_caja),font=("Times", l_b))
 boton4.place(x=300, y=310)
-boton4 = tk.Button(text="GRAFICAR ---",command=(),font=("Times", l_b))
+boton4 = tk.Button(text="GRAFICAR FUN",command=(genera_seno),font=("Times", l_b))
 boton4.place(x=300, y=350)
 boton4 = tk.Button(text="GRAFICAR TODOS",command=(pinta_todos),font=("Times", l_b))
 boton4.place(x=300, y=390)
