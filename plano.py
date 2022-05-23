@@ -1,5 +1,6 @@
 import pygame  
 import math
+from pygame.locals import *
 
 eje_x = [600,0,0]
 eje_y = [0,600,0]
@@ -12,7 +13,7 @@ mitad = 300
 ang_x = 0
 ang_y = 0
 ang_z = 0
-avance = 0.5
+avance = 5
 escala = 30
 figuras = []
 #------------------------------------------------------------------
@@ -20,7 +21,7 @@ identidad = [[1,0,0],
 			  [0,1,0],
 			  [0,0,0]]
 #------------------------------------------------------------------
-pantalla = pygame.display.set_mode((600,600))  
+pantalla = pygame.display.set_mode((600,620))  
 pantalla.fill((255, 255, 255))
 pygame.display.set_caption('Pygame Window')
 #------------------------------------------------------------------
@@ -36,24 +37,24 @@ def get_radianes(angulo):
 
 
 def rotacion_y():
-	#r_an = get_radianes(ang_y)
-	r_an = ang_y
+	r_an = get_radianes(ang_y)
+	#r_an = ang_y
 	mat_rotacion = [[math.cos(r_an),0,math.sin(r_an)],
 					[0,1,0],
 					[-math.sin(r_an), 0,math.cos(r_an)]]
 	return mat_rotacion
 
 def rotacion_x():
-	#r_an = get_radianes(ang_x)
-	r_an = ang_x
+	r_an = get_radianes(ang_x)
+	#r_an = ang_x
 	mat_rotacion = [[1,0,0],
 					[0,math.cos(r_an),-math.sin(r_an)],
 					[0, math.sin(r_an),math.cos(r_an)]]
 	return mat_rotacion
 
 def rotacion_z():
-	#r_an = get_radianes(ang_z)
-	r_an = ang_z
+	r_an = get_radianes(ang_z)
+	#r_an = ang_z
 	mat_rotacion = [[math.cos(r_an),-math.sin(r_an),0],
 					[math.sin(r_an),math.cos(r_an),0],
 					[0,0,1]]
@@ -94,7 +95,7 @@ def grafica_ejes():
 	pygame.draw.line(pantalla,(255,0,0),[R2_z[0]+300,R2_z[1]+300],[R2_z_m[0]+300,R2_z_m[1]+300])
 	#agregar_marcas()
 	pinta_figuras()
-	pygame.display.flip()
+	#pygame.display.flip()
 
 def pinta_plano(points,color):
 	points_aux = []
@@ -110,7 +111,7 @@ def pinta_plano(points,color):
 		pygame.draw.line(pantalla,color,escalar(a_p),escalar(c_p))
 		pygame.draw.line(pantalla,color,escalar(d_p),escalar(b_p))
 		pygame.draw.line(pantalla,color,escalar(d_p),escalar(c_p))
-		pygame.display.flip()
+		#pygame.display.flip()
 
 	return points_aux
 
@@ -118,22 +119,6 @@ def escalar(r2):
 	x = (r2[0]*escala)+mitad
 	y = (r2[1]*escala)+mitad
 	return [x,y]
-
-def rota_eje_x(mas):
-	global ang_x
-	ang_x += avance if mas else -avance
-	grafica_ejes()
-
-
-def rota_eje_y(mas):
-	global ang_y
-	ang_y += avance if mas else -avance
-	grafica_ejes()
-
-def rota_eje_z(mas):
-	global ang_z
-	ang_z += avance if mas else -avance
-	grafica_ejes()
 
 def pinta_punto(punto,color):
 	punto_x = transforma_punto(punto)
@@ -143,7 +128,7 @@ def pinta_punto(punto,color):
 	text = str(".")
 	mensaje = fuente.render(text, 0, color)
 	pantalla.blit(mensaje, (esca[0]-3,esca[1]-14))
-	pygame.display.flip()
+	#pygame.display.flip()
 
 def pinta_num(punto,color,txt):
 	punto_x = transforma_punto(punto)
@@ -153,7 +138,7 @@ def pinta_num(punto,color,txt):
 	text = str(txt)
 	mensaje = fuente.render(text, 0, color)
 	pantalla.blit(mensaje, (esca[0]+10,esca[1]+5))
-	pygame.display.flip()
+	#pygame.display.flip()
 
 
 def agregar_marcas():
@@ -220,7 +205,7 @@ def pinta_caja(points,color):
 	pygame.draw.line(pantalla,color,escalar(b_p),escalar(b1_p))
 	pygame.draw.line(pantalla,color,escalar(c_p),escalar(c1_p))
 	pygame.draw.line(pantalla,color,escalar(d_p),escalar(d1_p))
-	pygame.display.flip()
+	#pygame.display.flip()
 
 
 def pinta_linea(points,color):
@@ -231,11 +216,11 @@ def pinta_linea(points,color):
 	v1_r = proyection(transforma_punto(vec1))
 	v2_r = proyection(transforma_punto(vec2))
 	pygame.draw.line(pantalla, color,escalar(v1_r),escalar(v2_r))
-	pygame.display.flip()
+	#pygame.display.flip()
 
 def limpiar_pantalla():
 	pantalla.fill((255, 255, 255))
-	pygame.display.flip()
+	#pygame.display.flip()
 
 def inicia_todo():
 	global ang_x,ang_y,ang_z,figuras
@@ -244,7 +229,7 @@ def inicia_todo():
 	ang_y=0
 	ang_x=0
 	pantalla.fill((255, 255, 255))
-	pygame.display.flip()
+	#pygame.display.flip()
 	iniciar(escala)
 
 def iniciar(esca):
@@ -252,13 +237,35 @@ def iniciar(esca):
 	escala= esca
 	pygame.init()
 	grafica_ejes()
+	agrega_barra()
+
 	
 def pinta_todos(points,color):
 	for i in range(len(points)):
 		pinta_punto(points[i],color)
 		for j in range(i+1,len(points)):
 			pinta_linea([points[i],points[j]],color)
-	
+
+
+def agrega_barra():
+	pygame.draw.rect(pantalla, (209,209,209), pygame.Rect(0, 600, 480, 20))
+	fuente = pygame.font.Font(None, 25)
+	text_x = f"X: {ang_x}°"
+	text_y = f"Y: {ang_y}°"
+	text_z = f"Z: {ang_z}°"
+	mensaje = fuente.render(text_x, 0, (0,0,0))
+	pantalla.blit(mensaje, (10,601))
+	mensaje = fuente.render(text_y, 0, (0,0,255))
+	pantalla.blit(mensaje, (110,601))
+	mensaje = fuente.render(text_z, 0, (255,0,0))
+	pantalla.blit(mensaje, (210,601))
+
+	pygame.draw.rect(pantalla, (209,209,209), pygame.Rect(480, 600, 120, 20))
+	text2 = f"ESCALA: {escala}"
+	mensaje = fuente.render(text2, 0, (0,0,0))
+	pantalla.blit(mensaje, (490,601))
+	pygame.display.flip()
+
 def pinta_manta(points,colores):
 	
 	for i in range(len(points)):
@@ -268,35 +275,33 @@ def pinta_funcion(points,colores):
 	cont = 0
 	tamaño = colores[cont]
 	cont=1
-	print(tamaño)
 	for i in points:
 		pinta_punto(i,colores[cont])
 		cont+=1
 	cont = 1
 	cont_i = 0
 	i = 0
-	print(tamaño)
+
 	for i in range(tamaño):
 		for j in range(tamaño):
 			if j<tamaño-1 and i<tamaño-1:
-				pos1 = cont_i
-				pos2 = cont_i+1 
-				pos3 = cont_i+tamaño
-				l1 = [points[pos1],points[pos2]]
-				l2 = [points[pos1],points[pos3]]
+				l1 = [points[cont_i],points[cont_i+1 ]]
+				l2 = [points[cont_i],points[cont_i+tamaño]]
 				pinta_linea(l1,colores[cont])
 				pinta_linea(l2,colores[cont])
 			else:
 				if j == tamaño-1 and not(i == tamaño-1):
-					pos = cont_i+tamaño
-					lin = [points[cont_i],points[pos]]
+					lin = [points[cont_i],points[cont_i+tamaño]]
 					pinta_linea(lin,colores[cont])
 				elif i == tamaño-1 and not(j == tamaño-1):
-					pos = cont_i+1
-					lin = [points[cont_i],points[pos]]
+					lin = [points[cont_i],points[cont_i+1]]
 					pinta_linea(lin,colores[cont])
 			cont_i+=1
 			cont+=1
+
+def actualiza_angulo():
+	limpiar_pantalla()
+	iniciar(escala)
 
 def get_angulos():
 	return ang_x,ang_y,ang_z
@@ -316,6 +321,7 @@ def pinta_figura(tipo,points,color):
 		pinta_todos(points,color)
 	elif tipo == 'funcion':
 		pinta_funcion(points,color)
+	pygame.display.flip()
 
 def pinta_figuras():
 
@@ -332,4 +338,45 @@ def pinta_figuras():
 			pinta_todos(fig[1],fig[2])		
 		elif fig[0] == 'funcion':
 			pinta_funcion(fig[1],fig[2])
-	
+	pygame.display.flip()
+
+def eventos():
+	pygame.display.flip()
+	vari = True
+	global ang_x,ang_y,ang_z,escala
+
+	print("inicio eventos")
+	try:
+		while vari:
+			for e in pygame.event.get():
+				if e.type == pygame.KEYDOWN:
+					if e.key == pygame.K_UP or e.key == pygame.K_KP8:
+						ang_y += avance
+						actualiza_angulo()
+					if e.key == pygame.K_DOWN or e.key == pygame.K_KP2:
+						ang_y-=avance
+						actualiza_angulo()
+					if e.key == pygame.K_RIGHT or e.key == pygame.K_KP6:
+						ang_x+=avance
+						actualiza_angulo()
+					if e.key == pygame.K_LEFT or e.key == pygame.K_KP4:
+						ang_x-=avance
+						actualiza_angulo()
+					if e.key == pygame.K_7 or e.key == pygame.K_KP7:
+						ang_z-=avance
+						actualiza_angulo()
+					if e.key == pygame.K_9 or e.key == pygame.K_KP9:
+						ang_z+=avance
+						actualiza_angulo()
+					if e.key == pygame.K_KP_MINUS:
+						if escala > 5:
+							escala = escala-2
+							actualiza_angulo()
+					if e.key == pygame.K_KP_PLUS:
+						escala += 2
+						actualiza_angulo()
+					if e.key == pygame.K_ESCAPE:
+						vari = False
+	except:
+		pass
+	print("fin eventos")

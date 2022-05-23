@@ -1,15 +1,10 @@
-import math
-import numpy as np
-import random
-
-tam = 10
-
-r = 150
-g = 150
-b = 60
-
-
-
-a =  [random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)]
-
-print((25*(math.pi/180)))
+import pygame 
+  
+pygame.init() 
+  
+surface = pygame.display.set_mode((400,300)) 
+  
+color = (255,0,0) 
+while True:
+	pygame.draw.rect(surface, color, pygame.Rect(0, 600, 600, 20)) 
+	pygame.display.flip()

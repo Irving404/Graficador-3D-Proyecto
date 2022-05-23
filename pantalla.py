@@ -16,55 +16,8 @@ color_code=((0,0,255),('#0000ff'))
 arr_cor = []
 contador = 0.5
 
-def rotar_x_M():
-	plano.rota_eje_x(True)
-	asigna_txt()
-	
-def rotar_x_m():
-	plano.rota_eje_x(False)
-	asigna_txt()
-	
-def rotar_y_M():
-	plano.rota_eje_y(True)
-	asigna_txt()
-	
-def rotar_y_m():
-	plano.rota_eje_y(False)
-	asigna_txt()
-	
-def rotar_z_M():
-	plano.rota_eje_z(True)
-	asigna_txt()
-	
-def rotar_z_m():
-	plano.rota_eje_z(False)
-	asigna_txt()
-	
-def iniciar():
-	es = int(txt_escala.get())
-	plano.iniciar(es)
-	asigna_txt()
-
-def zoom_mas():
-    escala = int(txt_escala.get())
-    escala = escala+2
-    txt_escala.delete(0, tk.END)
-    txt_escala.insert(0, str(escala))
-    plano.limpiar_pantalla()
-    plano.iniciar(escala)
-
-def zoom_menos():
-    escala = int(txt_escala.get())
-    if escala > 5:
-        escala = escala-2
-    txt_escala.delete(0, tk.END)
-    txt_escala.insert(0, str(escala))
-    plano.limpiar_pantalla()
-    plano.iniciar(escala)
-
 def limpiar_pantalla():
 	plano.inicia_todo()
-	asigna_txt()
 
 def choose_color():
     global color_code
@@ -106,8 +59,10 @@ def pinta_todos():
 	plano.pinta_figura('todos',points,color_code[0])
 	agrega_figura("FIGURA")
 	
-def genera_seno():
-	tamaño = 10
+def genera_fun():
+	tamaño = 15
+	ava = 1
+
 	points = []
 	valores = []
 	cambio = int(255/(tamaño*tamaño))
@@ -117,15 +72,15 @@ def genera_seno():
 	while x<=tamaño:
 		y = 0
 		while y<=tamaño:
-			z = math.sin(x)*math.sin(x)
+			z = math.sin(x)
+			#z = x*x
 			points.append([x,y,z])
 			if not(z in valores):
 				valores.append(z)
-			y +=0.5
+			y +=ava
 		ii +=1
-		x += 0.5	
+		x += ava
 	valores = sorted(valores)
-
 	for i in valores:
 		dic.setdefault(i,get_color())
 	colores=[ii]
@@ -176,11 +131,6 @@ def secciona(arr):
 			cont += 1
 	arr_f.append([arr[len(arr)-3],arr[len(arr)-2],arr[len(arr)-1]])
 	return(arr_f)
-def asigna_txt():
-	ax,ay,az = plano.get_angulos()
-	a_x.config(text = f"X° = {ax}")
-	a_y.config(text = f"Y° = {ay}")
-	a_z.config(text = f"Z° = {az}")
 
 def agrega_figura(tipo):
 	global contador
@@ -188,6 +138,9 @@ def agrega_figura(tipo):
 	T2.tag_configure(tagg, background=color_code[1],foreground="#FFFFFF")
 	T2.insert(END, tipo+"\n", (tagg))
 	contador +=1
+
+def evento():
+	plano.eventos()
 	
 #------------------------------------------------------------------------------
 
@@ -202,105 +155,82 @@ mi_Frame.config(width="800", height="640")
 mi_Frame.config(bd=10) 
 mi_Frame.config(relief="sunken") 
 
+etiqueta1 = tk.Label(text="♣ ♣ GRAFICADOR 3D ♣ ♣",font=("Times", 40)).place(x=80,y=10)
+etiqueta1 = tk.Label(text="♣ ♣ IRVING ALDAHI BENITEZ HERNANDEZ ♣ ♣",font=("Times", 10)).place(x=30,y=610)
+etiqueta1 = tk.Label(text="♣ ♣ JOSE SOTELO ROMAN ♣ ♣",font=("Times", 10)).place(x=600,y=610)
+
 #------------------------------MOVIMIENTO---------------------------------------
-boton = tk.Button(text="rotar x → ", command=rotar_x_M,font=("Times", l_b))
-boton.place(x=700, y=590)
-boton = tk.Button(text="rotar x ← ", command=rotar_x_m,font=("Times", l_b))
-boton.place(x=540, y=590)
+boton = tk.Button(text="MOVER GRAFICA", command=evento,font=("Times", l_b))
+boton.place(x=600, y=550)
 
-boton = tk.Button(text="rotar y ↑ ", command=rotar_y_M,font=("Times", l_b))
-boton.place(x=625, y=550)
-boton = tk.Button(text="rotar y ↓ ", command=rotar_y_m,font=("Times", l_b))
-boton.place(x=625, y=590)
-
-boton = tk.Button(text="rotar z /", command=rotar_z_M,font=("Times", l_b))
-boton.place(x=707, y=550)
-boton = tk.Button(text="rotar z \\ ", command=rotar_z_m,font=("Times", l_b))
-boton.place(x=547, y=550)
-a_x = tk.Label(text="X° = 0",font=("Times", l_e+5))
-a_x.config(fg="black")
-a_x.place(x=30,y=590)
-a_y = tk.Label(text="Y° = 0",font=("Times", l_e+5))
-a_y.config(fg="blue")
-a_y.place(x=130,y=590)
-a_z = tk.Label(text="Z° = 0",font=("Times", l_e+5))
-a_z.config(fg="red")
-a_z.place(x=230,y=590)
-
-#------------------------------ESCALA---------------------------------------
-etiqueta1 = tk.Label(text="ESCALA",font=("Times", l_e)).place(x=30,y=35)
-boton1 = tk.Button(text="INICIAR", command=(iniciar),font=("Times", l_b))
-boton1.place(x=310, y=32)
-txt_escala = tk.Entry(font=("Times", l_en))
-txt_escala.place(x=100, y=35)
-#------------------------------ZOOM---------------------------------------
-etiqueta1 = tk.Label(text="ZOOM",font=("Times", l_e)).place(x=470,y=35)
-boton4 = tk.Button(text=" + ",command=(zoom_mas),font=("Times", l_b))
-boton4.place(x=520, y=30)
-boton4 = tk.Button(text=" - ",command=(zoom_menos),font=("Times", l_b))
-boton4.place(x=560, y=30)
 #---------------------------Limpiar Plano---------------------------------------
 boton4 = tk.Button(text="LIMPIAR GRAFICA",command=(limpiar_pantalla),font=("Times", l_b))
-boton4.place(x=600, y=30)
+boton4.place(x=50, y=550)
 #-----------------------------PINTA LINEA---------------------------------------
 #texto 2 
-etiqueta1 = tk.Label(text="X",font=("Times", l_e)).place(x=30,y=90)
+etiqueta1 = tk.Label(text="POINT 1",font=("Times", l_e)).place(x=120,y=100)
+etiqueta1 = tk.Label(text="POINT 2",font=("Times", l_e)).place(x=620,y=100)
+etiqueta1 = tk.Label(text="X",font=("Times", l_e)).place(x=30,y=130)
 #boton 2 
 boton2 = tk.Button(text="PINTAR PUNTO",command=(pinta_punto),font=("Times", l_b))
-boton2.place(x=335, y=95)
+boton2.place(x=335, y=135)
 boton2 = tk.Button(text="PINTAR VECTOR",command=(pinta_vector),font=("Times", l_b))
-boton2.place(x=330, y=132)
+boton2.place(x=330, y=172)
 #caja de texto de texto 2.
 x_txt = tk.Entry(font=("Times", l_en))
-x_txt.place(x=50, y=90)
+x_txt.place(x=50, y=130)
 #texto 3 
-etiqueta1 = tk.Label(text="Y",font=("Times", l_e)).place(x=30,y=120)
+etiqueta1 = tk.Label(text="Y",font=("Times", l_e)).place(x=30,y=160)
 #caja de texto de texto 3.
 y_txt = tk.Entry(font=("Times", l_en))
-y_txt.place(x=50, y=120)
+y_txt.place(x=50, y=160)
 #texto 4 
-etiqueta1 = tk.Label(text="Z",font=("Times", l_e)).place(x=30,y=150)
+etiqueta1 = tk.Label(text="Z",font=("Times", l_e)).place(x=30,y=190)
 #caja de texto de texto 3.
 z_txt = tk.Entry(font=("Times", l_en))
-z_txt.place(x=50, y=150)
-etiqueta1 = tk.Label(text="X",font=("Times", l_e)).place(x=30,y=90)
+z_txt.place(x=50, y=190)
+etiqueta1 = tk.Label(text="X",font=("Times", l_e)).place(x=30,y=130)
 #***********************************
 #caja de texto de texto 2.
-etiqueta1 = tk.Label(text="X",font=("Times", l_e)).place(x=530,y=90)
+etiqueta1 = tk.Label(text="X",font=("Times", l_e)).place(x=530,y=130)
 x1_txt = tk.Entry(font=("Times", l_en))
-x1_txt.place(x=550, y=90)
+x1_txt.place(x=550, y=130)
 #texto 3 
-etiqueta1 = tk.Label(text="Y",font=("Times", l_e)).place(x=530,y=120)
+etiqueta1 = tk.Label(text="Y",font=("Times", l_e)).place(x=530,y=160)
 #caja de texto de texto 3.
 y1_txt = tk.Entry(font=("Times", l_en))
-y1_txt.place(x=550, y=120)
+y1_txt.place(x=550, y=160)
 #texto 4 
-etiqueta1 = tk.Label(text="Z",font=("Times", l_e)).place(x=530,y=150)
+etiqueta1 = tk.Label(text="Z",font=("Times", l_e)).place(x=530,y=190)
 #caja de texto de texto 3.
 z1_txt = tk.Entry(font=("Times", l_en))
-z1_txt.place(x=550, y=150)
+z1_txt.place(x=550, y=190)
 #---------------------------PINTA Plano---------------------------------------
-etiqueta1 = tk.Label(text="COORDENADAS",font=("Times", l_e)).place(x=80,y=200)
+
+etiqueta1 = tk.Label(text="COORDENADAS",font=("Times", l_e)).place(x=80,y=240)
 T = tk.Text(height = 10, width = 25,font=("Times", 15))
-T.place(x=15,y=230)
+T.place(x=15,y=270)
 boton3 = tk.Button(text="CARGAR ARCHIVO",command=(cargar_archivo),font=("Times", l_b))
-boton3.place(x=300, y=230)
+boton3.place(x=300, y=270)
 boton4 = tk.Button(text="GRAFICAR PLANO",command=(pinta_plano),font=("Times", l_b))
-boton4.place(x=300, y=270)
-boton4 = tk.Button(text="GRAFICAR CAJA",command=(pinta_caja),font=("Times", l_b))
 boton4.place(x=300, y=310)
-boton4 = tk.Button(text="GRAFICAR FUN",command=(genera_seno),font=("Times", l_b))
+boton4 = tk.Button(text="GRAFICAR CAJA",command=(pinta_caja),font=("Times", l_b))
 boton4.place(x=300, y=350)
-boton4 = tk.Button(text="GRAFICAR TODOS",command=(pinta_todos),font=("Times", l_b))
+boton4 = tk.Button(text="GRAFICAR FUN",command=(genera_fun),font=("Times", l_b))
 boton4.place(x=300, y=390)
-#---------------------------Boton color---------------------------------------
-boton4 = tk.Button(text = "COLOR",font=("Times", l_b),command = (choose_color))
-boton4.place(x=300, y=450)
-color_et = tk.Label(text="     ",font=("Times", l_b),bg=color_code[1])
-color_et.place(x=380,y=453)
-#---------------------------PINTA Plano---------------------------------------
-etiqueta1 = tk.Label(text="FIGURAS CARGADAS",font=("Times", l_e)).place(x=570,y=200)
+boton4 = tk.Button(text="GRAFICAR TODOS",command=(pinta_todos),font=("Times", l_b))
+boton4.place(x=300, y=430)
+etiqueta1 = tk.Label(text="FIGURAS CARGADAS",font=("Times", l_e)).place(x=570,y=240)
 T2 = tk.Text(height = 10, width = 25,font=("Times", 15))
-T2.place(x=500,y=230)
+T2.place(x=500,y=270)
+#------------Boton color----------------------
+boton4 = tk.Button(text = "COLOR",font=("Times", l_b),command = (choose_color))
+boton4.place(x=300, y=490)
+color_et = tk.Label(text="     ",font=("Times", l_b),bg=color_code[1])
+color_et.place(x=380,y=493)
+
+
+es = int(15)
+plano.iniciar(15)
 
 raiz.mainloop()
